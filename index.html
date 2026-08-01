@@ -368,12 +368,12 @@ svg text{font-family:"JetBrains Mono";fill:var(--tx-3)}
     <div class="sec-head">
       <div class="eyebrow"><span class="idx">04 —</span> The Revenue Model</div>
       <h2>Built from real prices. Scale the reach.</h2>
-      <p class="lead">Two engines on documented prices — the ASK Profile ($29 / $49 / $59) and live-cohort training ($1,850/seat, 20-seat cohorts) — distributed through three sales channels. Set the reach and watch combined revenue respond.</p>
+      <p class="lead">Three engines on documented prices — the ASK Profile ($29 / $49 / $59), live-cohort training ($1,850/seat, 20-seat cohorts), and the 16-title evergreen/online course library ($49–$99) — distributed through three sales channels. Set the reach and watch combined revenue respond.</p>
     </div>
     <div class="grid-3-2">
       <div class="panel">
         <h3>Model national reach</h3>
-        <div class="ph-sub">Two revenue engines and the persona mix</div>
+        <div class="ph-sub">Three revenue engines and the persona mix</div>
         <div class="control">
           <div class="top"><label for="volSlider">ASK Profiles per month</label><span class="out" id="volOut">2,000</span></div>
           <input type="range" id="volSlider" min="250" max="10000" value="2000" step="250">
@@ -389,20 +389,27 @@ svg text{font-family:"JetBrains Mono";fill:var(--tx-3)}
           <input type="range" id="coachSlider" min="4" max="30" value="5" step="1">
           <div class="desc">$1,850/seat × 20 seats = $37,000 per cohort. 8 series (24 courses) support 4–6 cohorts today; more series and parallel cohorts scale this well beyond.</div>
         </div>
+        <div class="control">
+          <div class="top"><label for="evergreenSlider">Evergreen course sales / month</label><span class="out" id="evergreenOut">300</span></div>
+          <input type="range" id="evergreenSlider" min="0" max="2000" value="300" step="50">
+          <div class="desc">16-title online library at $49–$99/course (avg $74) — ongoing, largely passive; volume is market-dependent, so this is illustrative.</div>
+        </div>
         <div class="field-row"><label>Channel-sourced share of revenue</label><div class="inp"><input type="number" id="chanPct" value="60" step="5"><span>%</span></div></div>
-        <p class="footnote">Documented rates: Profiles $29 / $49 / $59; live-cohort training $1,850/seat × 20 seats ($37K/cohort), 8 series / 24 courses supporting 4–6 cohorts today; commissions Ambassadors 10% · Agents 10–15% · Partners ~15%. Volumes illustrative. 16 evergreen/online courses ($49–$99 each) are additional upside, not modeled here — see note below.</p>
+        <p class="footnote">Documented rates: Profiles $29 / $49 / $59; live-cohort training $1,850/seat × 20 seats ($37K/cohort), 8 series / 24 courses supporting 4–6 cohorts today; evergreen library 16 courses at $49–$99 (avg $74); commissions Ambassadors 10% · Agents 10–15% · Partners ~15%. Assessment, cohort-count, and evergreen-sales volumes are all illustrative.</p>
       </div>
       <div class="panel ink">
         <h3>Combined annual run-rate</h3>
-        <div class="ph-sub">Assessments + coach training, on the selected reach</div>
+        <div class="ph-sub">Assessments + live-cohort + evergreen courses, on the selected reach</div>
         <div id="revBars"></div>
         <div class="out-grid" style="margin-top:20px;border-color:var(--navy-3)">
           <div class="o" style="background:var(--navy-2)"><div class="k">Assessment revenue</div><div class="v" id="oRev" style="color:#fff">$—</div><div class="sub" style="color:var(--tx-on-dark-2)" id="oBlend">—</div></div>
           <div class="o" style="background:var(--navy-2)"><div class="k">Live-cohort training revenue</div><div class="v" id="oCoach" style="color:#fff">$—</div><div class="sub" style="color:var(--tx-on-dark-2)">$37K/cohort · 20 seats @ $1,850</div></div>
+          <div class="o" style="background:var(--navy-2)"><div class="k">Evergreen course revenue</div><div class="v" id="oEvergreen" style="color:#fff">$—</div><div class="sub" style="color:var(--tx-on-dark-2)">16 titles · avg $74/course</div></div>
           <div class="o" style="background:var(--navy-2)"><div class="k">Combined annual</div><div class="v" id="oTotal" style="color:var(--gold-hi)">$—</div><div class="sub" style="color:var(--tx-on-dark-2)">documented pricing</div></div>
           <div class="o" style="background:var(--navy-2)"><div class="k">Channel commission</div><div class="v" id="oChan" style="color:#fff">$—</div><div class="sub" style="color:var(--tx-on-dark-2)" id="oChanSub">blended across 3 channels</div></div>
+          <div class="o" style="background:var(--navy-2)"><div class="k">Revenue engines</div><div class="v" style="color:#fff">3</div><div class="sub" style="color:var(--tx-on-dark-2)">assessments · live-cohort · evergreen</div></div>
         </div>
-        <p class="card-note" style="color:var(--tx-on-dark-2);margin-top:14px">Speaking &amp; engagements, and the 16-title evergreen/online course library ($49–$99/course), sit <b style="color:#fff">above</b> this — ongoing passive-income lines the company quantifies in diligence.</p>
+        <p class="card-note" style="color:var(--tx-on-dark-2);margin-top:14px">Speaking &amp; engagements sit <b style="color:#fff">above</b> this — a demand engine and revenue line the company quantifies in diligence.</p>
       </div>
     </div>
   </section>
@@ -509,18 +516,20 @@ function blendedPrice(mix){ // mix = share of leadership+team (split evenly), re
   return pers*p.personal+lead*p.leadership+team*p.team;
 }
 function renderRevModel(){
-  const vol=+$('#volSlider').value, mix=+$('#mixSlider').value, coach=+$('#coachSlider').value, chan=+$('#chanPct').value/100;
-  $('#volOut').textContent=vol.toLocaleString();$('#mixOut').textContent=mix+'%';$('#coachOut').textContent=coach.toLocaleString();
-  const blend=blendedPrice(mix), assessRev=vol*12*blend, coachRev=coach*DATA.pricing.coach.perCohort, total=assessRev+coachRev;
+  const vol=+$('#volSlider').value, mix=+$('#mixSlider').value, coach=+$('#coachSlider').value, evergreen=+$('#evergreenSlider').value, chan=+$('#chanPct').value/100;
+  $('#volOut').textContent=vol.toLocaleString();$('#mixOut').textContent=mix+'%';$('#coachOut').textContent=coach.toLocaleString();$('#evergreenOut').textContent=evergreen.toLocaleString();
+  const eg=DATA.pricing.evergreen, egAvg=(eg.priceLo+eg.priceHi)/2;
+  const blend=blendedPrice(mix), assessRev=vol*12*blend, coachRev=coach*DATA.pricing.coach.perCohort, evergreenRev=evergreen*12*egAvg, total=assessRev+coachRev+evergreenRev;
   const ch=DATA.pricing.channels, blendedRate=ch.reduce((a,c)=>a+c.split*c.rate,0), commission=total*chan*blendedRate;
   $('#oRev').textContent=fmtK(assessRev);$('#oBlend').textContent='blended '+fmt(blend)+' / profile';
   $('#oCoach').textContent=fmtK(coachRev);
+  $('#oEvergreen').textContent=fmtK(evergreenRev);
   $('#oTotal').textContent=fmtK(total);
   $('#oChan').textContent=fmtK(commission);
   $('#oChanSub').textContent=pct(blendedRate)+' blended · '+pct(chan)+' sourced';
-  // stacked bar: two engines
-  const data=[{k:"ASK Profile assessments",rev:assessRev,c:'--align'},{k:"Live-cohort training",rev:coachRev,c:'--shift'}];
-  const box=$('#revBars'),W=box.clientWidth||360,H=158,full=W-8,tot=Math.max(1,total);
+  // stacked bar: three engines
+  const data=[{k:"ASK Profile assessments",rev:assessRev,c:'--align'},{k:"Live-cohort training",rev:coachRev,c:'--shift'},{k:"Evergreen courses",rev:evergreenRev,c:'--keep'}];
+  const box=$('#revBars'),W=box.clientWidth||360,H=178,full=W-8,tot=Math.max(1,total);
   let x=4,g='';
   data.forEach(d=>{const w=d.rev/tot*full;g+=`<rect x="${x}" y="46" width="${Math.max(0,w-2)}" height="30" fill="var(${d.c})" data-tt="${d.k}" data-tv="${fmtK(d.rev)}/yr"></rect>`;x+=w;});
   g+=`<text x="4" y="30" style="fill:#fff;font-family:Montserrat;font-size:26px;font-weight:600">${fmtK(total)}</text>`;
@@ -528,8 +537,9 @@ function renderRevModel(){
   g+=`<g font-family="JetBrains Mono" font-size="10.5">
     <rect x="4" y="98" width="11" height="11" fill="var(--align)"/><text x="21" y="107" style="fill:var(--tx-on-dark-2)">Assessments · ${fmtK(assessRev)}</text>
     <rect x="4" y="118" width="11" height="11" fill="var(--shift)"/><text x="21" y="127" style="fill:var(--tx-on-dark-2)">Live-cohort training · ${fmtK(coachRev)}</text>
-    <rect x="4" y="138" width="11" height="11" fill="var(--keep)"/><text x="21" y="147" style="fill:var(--tx-on-dark-2)">Ambassadors 10% · Agents 10–15% · Partners ~15%</text></g>`;
-  box.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" aria-label="Combined revenue: assessments + coach training">${g}</svg>`;
+    <rect x="4" y="138" width="11" height="11" fill="var(--keep)"/><text x="21" y="147" style="fill:var(--tx-on-dark-2)">Evergreen courses · ${fmtK(evergreenRev)}</text>
+    <text x="4" y="167" style="fill:var(--tx-on-dark-2)">Ambassadors 10% · Agents 10–15% · Partners ~15%</text></g>`;
+  box.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" aria-label="Combined revenue: assessments + live-cohort training + evergreen courses">${g}</svg>`;
   wireTips(box);
 }
 
@@ -551,7 +561,7 @@ function boot(){
   renderKpis();renderMethods();renderResults();renderModel();renderRevModel();buildRail();
   $('#prepDate').textContent=DATA.meta.prepared;
   profileField($('#heroCanvas'),{n:150});
-  ['volSlider','mixSlider','coachSlider','chanPct'].forEach(id=>$('#'+id).addEventListener('input',renderRevModel));
+  ['volSlider','mixSlider','coachSlider','evergreenSlider','chanPct'].forEach(id=>$('#'+id).addEventListener('input',renderRevModel));
   let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(renderRevModel,180);});
 }
 
