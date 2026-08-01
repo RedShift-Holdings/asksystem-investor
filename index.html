@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>The ASK System — Confidential Investment Memorandum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Mulish:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ================= TOKENS — The ASK System (navy + gold, ALIGN/SHIFT/KEEP zones; squared) ================= */
+:root{
+  --navy:#1A2A45; --navy-2:#22375A; --navy-3:#2B4C7E;
+  --gold:#C8892F; --gold-hi:#E2A03F; --gold-deep:#9C6A1E;
+  --coral:#EF4E48;
+  --align:#C8892F; --shift:#3D6DA8; --keep:#5B8C5A;   /* the three pillars */
+  --good:#2E7D57; --warn:#B7791F; --crit:#C0463A;
+  --radius:0px;
+
+  /* LIGHT default (human, positive, editorial) */
+  --bg:#EEEAE0; --surface:#FBFAF6; --surface-2:#FFFFFF; --panel-ink:#16233B;
+  --line:#DED8CA; --line-strong:#C6BCA6;
+  --tx:#1A2A45; --tx-2:#4C5972; --tx-3:#8A8574;
+  --tx-on-dark:#F3F1EA; --tx-on-dark-2:#B9C2D2;
+  --accent:var(--gold); --accent-ink:#8A5E1C;
+  --val:var(--navy-3); --val-ink:#274E82;
+  --chart-surface:#FBFAF6;
+  --shadow:0 1px 2px rgba(26,42,69,.06),0 12px 34px rgba(26,42,69,.10);
+  --frost:rgba(255,255,255,.72);
+  --hero-a:rgba(246,244,239,.96); --hero-b:rgba(246,244,239,.55); --hero-c:rgba(246,244,239,.12);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0E1728; --surface:#16233B; --surface-2:#1C2C49; --panel-ink:#0A1120;
+    --line:#26364F; --line-strong:#37496A; --tx:#EDF1F8; --tx-2:#AEB9CC; --tx-3:#7A8093;
+    --accent:var(--gold-hi); --accent-ink:#E2A03F; --val:#6E9BD1; --val-ink:#88B2DE;
+    --good:#4FB488; --warn:#E2A03F; --crit:#E0685C; --chart-surface:#16233B;
+    --shadow:0 1px 2px rgba(0,0,0,.5),0 16px 44px rgba(0,0,0,.5); --frost:rgba(22,35,59,.6);
+    --hero-a:rgba(14,23,40,.92); --hero-b:rgba(14,23,40,.5); --hero-c:rgba(14,23,40,.08);
+  }
+}
+:root[data-theme="light"]{
+  --bg:#EEEAE0; --surface:#FBFAF6; --surface-2:#FFFFFF; --panel-ink:#16233B;
+  --line:#DED8CA; --line-strong:#C6BCA6; --tx:#1A2A45; --tx-2:#4C5972; --tx-3:#8A8574;
+  --accent:var(--gold); --accent-ink:#8A5E1C; --val:var(--navy-3); --val-ink:#274E82;
+  --chart-surface:#FBFAF6; --shadow:0 1px 2px rgba(26,42,69,.06),0 12px 34px rgba(26,42,69,.10); --frost:rgba(255,255,255,.72);
+  --hero-a:rgba(246,244,239,.96); --hero-b:rgba(246,244,239,.55); --hero-c:rgba(246,244,239,.12);
+}
+:root[data-theme="dark"]{
+  --bg:#0E1728; --surface:#16233B; --surface-2:#1C2C49; --panel-ink:#0A1120;
+  --line:#26364F; --line-strong:#37496A; --tx:#EDF1F8; --tx-2:#AEB9CC; --tx-3:#7A8093;
+  --accent:var(--gold-hi); --accent-ink:#E2A03F; --val:#6E9BD1; --val-ink:#88B2DE;
+  --good:#4FB488; --warn:#E2A03F; --crit:#E0685C; --chart-surface:#16233B;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 16px 44px rgba(0,0,0,.5); --frost:rgba(22,35,59,.6);
+  --hero-a:rgba(14,23,40,.92); --hero-b:rgba(14,23,40,.5); --hero-c:rgba(14,23,40,.08);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+body{background:var(--bg);color:var(--tx);font-family:"Mulish",-apple-system,BlinkMacSystemFont,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:"Fraunces",Georgia,serif;font-weight:600;line-height:1.08;text-wrap:balance;color:var(--tx)}
+.mono,.num{font-family:"JetBrains Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+button{font-family:inherit;cursor:pointer}
+img{max-width:100%;display:block}
+.eyebrow{font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--accent-ink)}
+.eyebrow .idx{color:var(--tx-3)}
+
+/* gate */
+#gate{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:24px;overflow:hidden;background:var(--bg)}
+#gate canvas{position:absolute;inset:0;opacity:.9}
+#gate .veil{position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 42%,transparent,var(--bg) 76%)}
+#gate .card{position:relative;z-index:2;width:min(440px,100%);text-align:center}
+#gate .logo{width:230px;margin:0 auto 8px}
+:root[data-theme="dark"] #gate .logo,@media(prefers-color-scheme:dark){#gate .logo{filter:brightness(0) invert(1)}}
+#gate .kicker{font-family:"JetBrains Mono";font-size:.66rem;letter-spacing:.32em;text-transform:uppercase;color:var(--accent-ink);margin-top:6px}
+#gate p{color:var(--tx-2);font-size:.9rem;margin:22px auto 24px;line-height:1.55;max-width:36ch}
+#gate .field{display:flex;gap:8px;background:var(--surface);border:1px solid var(--line-strong);padding:6px;box-shadow:var(--shadow)}
+#gate input{flex:1;background:transparent;border:0;color:var(--tx);font-size:1rem;padding:10px 12px;font-family:"JetBrains Mono";letter-spacing:.14em}
+#gate input:focus{outline:none}
+#gate button{background:var(--navy);color:#fff;border:0;font-weight:800;padding:0 22px}
+#gate button:hover{background:var(--navy-3)}
+#gate .err{color:var(--crit);font-size:.8rem;min-height:1.2em;margin-top:14px;font-family:"JetBrains Mono"}
+#gate .hint{margin-top:26px;font-size:.68rem;color:var(--tx-3);letter-spacing:.04em}
+body.locked{overflow:hidden;height:100vh}
+body.locked #shell{filter:blur(9px);pointer-events:none;user-select:none}
+
+/* layout */
+#shell{max-width:1180px;margin:0 auto;padding:0 clamp(20px,5vw,64px)}
+.rail{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:40;display:none}
+@media(min-width:1300px){.rail{display:block}}
+.rail ol{list-style:none;display:flex;flex-direction:column;gap:3px}
+.rail a{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--tx-3);font-size:.64rem;font-family:"JetBrains Mono";letter-spacing:.06em;padding:5px 0;transition:color .2s;white-space:nowrap}
+.rail a .dot{width:20px;height:1px;background:var(--line-strong);transition:.2s;flex:none}
+.rail a .rname{max-width:0;overflow:hidden;opacity:0;transition:max-width .28s,opacity .2s;color:var(--tx-2)}
+.rail a:hover .rname,.rail a.on .rname{max-width:160px;opacity:1;margin-left:2px}
+.rail a.on{color:var(--accent-ink)} .rail a.on .dot{width:32px;background:var(--accent);height:2px} .rail a.on .rn{color:var(--accent-ink)}
+
+section{padding:clamp(64px,9vw,116px) 0;border-top:1px solid var(--line)}
+.lead{font-size:clamp(1.05rem,2.1vw,1.32rem);line-height:1.5;color:var(--tx-2);max-width:66ch;font-weight:400}
+.lead em{font-style:italic;color:var(--accent-ink)}
+.sec-head{margin-bottom:clamp(34px,5vw,56px)}
+.sec-head h2{font-size:clamp(1.9rem,4.4vw,3rem);margin:16px 0 20px;letter-spacing:-.015em}
+.sec-head h2 em{font-style:italic;color:var(--accent);font-weight:500}
+
+/* hero */
+#hero{position:relative;min-height:94vh;display:flex;flex-direction:column;margin:0 calc(50% - 50vw);overflow:hidden;border-top:0}
+#hero canvas{position:absolute;inset:0}
+#hero .veil{position:absolute;inset:0;background:linear-gradient(100deg,var(--hero-a) 0%,var(--hero-a) 26%,var(--hero-b) 62%,var(--hero-c) 100%)}
+#hero .wrap{position:relative;z-index:3;max-width:1180px;margin:0 auto;padding:0 clamp(20px,5vw,64px);width:100%;flex:1;display:flex;flex-direction:column}
+#hero .topbar{display:flex;justify-content:space-between;align-items:center;padding:26px 0;gap:16px}
+#hero .topbar img{width:170px}
+:root[data-theme="dark"] #hero .topbar img,@media(prefers-color-scheme:dark){#hero .topbar img{filter:brightness(0) invert(1)}}
+#hero .tag{font-family:"JetBrains Mono";font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:var(--tx-2);text-align:right}
+#hero .hero-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:40px 0;max-width:40ch}
+#hero h1{color:var(--tx);font-size:clamp(2.5rem,6vw,5rem);font-weight:500;letter-spacing:-.025em;line-height:1.02}
+#hero h1 em{font-style:italic;color:var(--accent);font-weight:400}
+#hero .sub{color:var(--tx-2);font-size:clamp(1.05rem,2vw,1.28rem);max-width:54ch;margin-top:26px;line-height:1.5}
+#hero .topline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:42px 0;max-width:820px}
+#hero .topline .cell{background:var(--frost);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);border:1px solid var(--line-strong);padding:18px 18px}
+#hero .topline .cell.hl{border-color:var(--accent)}
+#hero .topline .k{font-family:"JetBrains Mono";font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tx-2)}
+#hero .topline .v{font-family:"Fraunces";font-size:clamp(1.4rem,2.7vw,1.85rem);font-weight:600;color:var(--tx);margin-top:6px}
+#hero .topline .v .u{font-size:.55em;font-family:"JetBrains Mono";color:var(--tx-3);vertical-align:.35em;margin-left:2px}
+#hero .topline .cell.hl .v{color:var(--accent-ink)}
+#hero .scroll{padding:18px 0 32px;font-family:"JetBrains Mono";font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--tx-2);display:flex;align-items:center;gap:12px}
+#hero .scroll .ln{width:52px;height:2px;background:var(--accent);animation:pull 2.4s ease-in-out infinite;transform-origin:left}
+@keyframes pull{0%,100%{transform:scaleX(.4)}50%{transform:scaleX(1)}}
+@media(max-width:720px){#hero .topline{grid-template-columns:repeat(2,1fr)}#hero .hero-body{max-width:100%}#hero .veil{background:linear-gradient(180deg,var(--hero-b),var(--hero-a) 55%)}}
+
+/* kpi */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);padding:22px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.kpi.nv::before{background:var(--navy-3)}
+.kpi .k{font-family:"JetBrains Mono";font-size:.64rem;letter-spacing:.13em;text-transform:uppercase;color:var(--tx-3)}
+.kpi .v{font-family:"Fraunces";font-size:2rem;font-weight:600;margin:12px 0 4px;line-height:1}
+.kpi .d{font-size:.82rem;color:var(--tx-2)}
+.chip{display:inline-flex;align-items:center;gap:5px;font-family:"JetBrains Mono";font-size:.72rem;font-weight:600;padding:2px 7px}
+.chip.up{color:var(--good);background:color-mix(in srgb,var(--good) 14%,transparent)}
+.chip.flat{color:var(--tx-2);background:color-mix(in srgb,var(--tx-2) 12%,transparent)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.grid-3-2{display:grid;grid-template-columns:3fr 2fr;gap:28px;align-items:start}
+@media(max-width:820px){.grid2,.grid-3-2{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);padding:clamp(22px,3vw,32px);box-shadow:var(--shadow)}
+.panel.ink{background:var(--panel-ink);color:var(--tx-on-dark);border-color:var(--navy-3)}
+.panel.ink h3,.panel.ink h4{color:#fff}
+.panel h3{font-size:1.28rem;margin-bottom:4px}
+.panel .ph-sub{color:var(--tx-2);font-size:.9rem;margin-bottom:22px}
+.panel.ink .ph-sub{color:var(--tx-on-dark-2)}
+.card-note{font-size:.78rem;color:var(--tx-3);line-height:1.5}
+
+.drow{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:11px 0;border-bottom:1px solid var(--line)}
+.drow:last-child{border-bottom:0}
+.drow .lbl{color:var(--tx-2);font-size:.92rem}
+.drow .val{font-family:"JetBrains Mono";font-weight:500}
+.drow.tot{border-top:2px solid var(--line-strong);border-bottom:0;margin-top:6px;padding-top:14px}
+.drow.tot .lbl{color:var(--tx);font-weight:700;font-family:"Fraunces";font-size:1.05rem}
+.drow.tot .val{font-weight:600;font-size:1.1rem;color:var(--val-ink)}
+.drow .pct{color:var(--tx-3);font-size:.78rem;margin-left:10px}
+
+/* pillars / methods */
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:760px){.trio{grid-template-columns:1fr}}
+.pill{border:1px solid var(--line);background:var(--surface);padding:20px;box-shadow:var(--shadow);position:relative}
+.pill .tk{width:34px;height:5px;margin-bottom:14px}
+.pill .nm{font-family:"Fraunces";font-size:1.15rem;font-weight:600;color:var(--tx)}
+.pill .idx{font-family:"JetBrains Mono";font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-3)}
+.pill .ds{font-size:.86rem;color:var(--tx-2);margin-top:8px;line-height:1.5}
+.pill .met{font-family:"JetBrains Mono";font-size:.72rem;color:var(--accent-ink);margin-top:12px}
+.quad{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:16px}
+@media(max-width:680px){.quad{grid-template-columns:repeat(2,1fr)}}
+.quad .q{background:var(--surface);padding:16px 18px}
+.quad .q .h{font-family:"Fraunces";font-weight:600;color:var(--tx)}
+.quad .q .d{font-size:.78rem;color:var(--tx-2);margin-top:5px}
+
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px}
+.legend .li{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--tx-2)}
+.legend .sw{width:12px;height:12px;flex:none}
+
+/* controls */
+.control{margin-bottom:20px}
+.control .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
+.control label{font-size:.9rem;font-weight:600;color:var(--tx)}
+.control .out{font-family:"JetBrains Mono";font-weight:600;color:var(--accent-ink);font-size:1.02rem}
+.control .desc{font-size:.76rem;color:var(--tx-3);margin-top:7px;line-height:1.45}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;background:var(--line-strong);outline-offset:6px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:var(--accent);border:3px solid var(--surface);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;background:var(--accent);border:3px solid var(--surface);cursor:pointer;border-radius:0}
+.field-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+.field-row label{font-size:.86rem;color:var(--tx-2)}
+.field-row .inp{display:flex;align-items:center;gap:4px;background:var(--surface-2);border:1px solid var(--line-strong);padding:4px 8px}
+.field-row .inp span{color:var(--tx-3);font-size:.85rem;font-family:"JetBrains Mono"}
+.field-row input[type=number]{width:92px;border:0;background:transparent;color:var(--tx);font-family:"JetBrains Mono";font-size:.92rem;text-align:right}
+.field-row input:focus{outline:none}
+.seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--line-strong);padding:3px;gap:3px}
+.seg button{border:0;background:transparent;color:var(--tx-2);padding:7px 14px;font-size:.82rem;font-weight:600}
+.seg button.on{background:var(--accent);color:#241a06}
+
+.out-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.out-grid .o{background:var(--surface);padding:20px}
+.out-grid .o .k{font-family:"JetBrains Mono";font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tx-3)}
+.out-grid .o .v{font-family:"Fraunces";font-size:1.85rem;font-weight:600;margin-top:8px;line-height:1;color:var(--tx)}
+.out-grid .o .sub{font-size:.76rem;color:var(--tx-2);margin-top:6px}
+
+.callout{border-left:3px solid var(--accent);padding:6px 0 6px 20px;color:var(--tx-2);font-size:.95rem;max-width:64ch}
+.footnote{font-size:.76rem;color:var(--tx-3);line-height:1.5;margin-top:10px}
+
+/* band */
+.band{position:relative;margin:0 calc(50% - 50vw);overflow:hidden;border-block:1px solid var(--line);background:var(--navy)}
+.band .inner{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:clamp(40px,7vw,86px) clamp(20px,5vw,64px)}
+.band .eb{font-family:"JetBrains Mono";font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-hi)}
+.band h3{color:#fff;font-size:clamp(1.6rem,3.6vw,2.6rem);max-width:24ch;margin-top:12px}
+.band p{color:var(--tx-on-dark-2);max-width:60ch;margin-top:12px}
+.band .zones{display:flex;gap:24px;margin-top:24px;flex-wrap:wrap}
+.band .z{display:flex;align-items:center;gap:9px;color:#fff;font-weight:600}
+.band .z .sw{width:14px;height:14px;flex:none}
+.band .z small{display:block;color:var(--tx-on-dark-2);font-weight:400;font-size:.78rem}
+.shot{margin:26px 0 6px;border:1px solid var(--navy-3);box-shadow:0 20px 60px rgba(0,0,0,.45);max-width:940px;background:#fff}
+.shot img{width:100%;display:block}
+
+.ways{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:760px){.ways{grid-template-columns:1fr}}
+.way{border:1px solid var(--line);background:var(--surface);padding:22px;box-shadow:var(--shadow)}
+.way .n{font-family:"JetBrains Mono";font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-ink)}
+.way h4{font-size:1.15rem;margin:8px 0 8px}
+.way p{font-size:.86rem;color:var(--tx-2)}
+.way .eq{margin-top:12px;font-family:"JetBrains Mono";font-size:.72rem;color:var(--tx-3)}
+
+#themeBtn{position:fixed;right:18px;top:14px;z-index:35;background:var(--surface);border:1px solid var(--line-strong);color:var(--tx-2);padding:7px 13px;font-size:.72rem;font-family:"JetBrains Mono";box-shadow:var(--shadow)}
+footer{border-top:1px solid var(--line);padding:44px 0 70px;color:var(--tx-3);font-size:.8rem;line-height:1.6}
+footer .conf{font-family:"JetBrains Mono";font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-2);margin-bottom:14px}
+
+svg text{font-family:"JetBrains Mono";fill:var(--tx-3)}
+.axis-lbl{font-size:11px}
+.tip{position:fixed;pointer-events:none;z-index:60;background:var(--panel-ink);color:var(--tx-on-dark);border:1px solid var(--navy-3);padding:9px 12px;font-size:.78rem;box-shadow:0 8px 24px rgba(0,0,0,.4);opacity:0;transition:opacity .12s;max-width:230px}
+.tip .tt{font-family:"JetBrains Mono";font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-hi);margin-bottom:3px}
+.tip .tv{font-family:"JetBrains Mono";font-weight:600}
+</style>
+</head>
+<body class="locked">
+
+<div id="gate">
+  <canvas id="gateCanvas"></canvas><div class="veil"></div>
+  <div class="card">
+    <img class="logo" src="assets/ask-logo-color.png" alt="The ASK System" />
+    <div class="kicker">Confidential Investment Memorandum</div>
+    <p>Prepared for prospective investors and strategic partners under the Mutual NDA. Enter your access code.</p>
+    <form class="field" id="gateForm" autocomplete="off">
+      <input id="pw" type="password" placeholder="Access code" aria-label="Access code" />
+      <button type="submit">Enter</button>
+    </form>
+    <div class="err" id="gateErr" role="alert"></div>
+    <div class="hint">RedShift Holdings · Opportunity A · By invitation only</div>
+  </div>
+</div>
+
+<button id="themeBtn" aria-label="Toggle theme">◐ Theme</button>
+<nav class="rail" aria-label="Contents"><ol id="railList"></ol></nav>
+
+<div id="shell">
+  <!-- HERO -->
+  <header id="hero">
+    <canvas id="heroCanvas"></canvas><div class="veil"></div>
+    <div class="wrap">
+      <div class="topbar">
+        <img src="assets/ask-logo-color.png" alt="The ASK System" />
+        <div class="tag">RedShift Holdings · Opportunity A<br>Assessment &amp; Certification</div>
+      </div>
+      <div class="hero-body">
+        <div class="eyebrow" style="margin-bottom:22px">The Investment Case</div>
+        <h1>Most programs inspire. This one <em>installs.</em></h1>
+        <p class="sub">A validated way to measure how people actually improve — assessments, coach training, and certification, built and delivering, ready for national coverage across three sales channels.</p>
+        <div class="topline">
+          <div class="cell"><div class="k">ASK Profile</div><div class="v">$29–59</div></div>
+          <div class="cell"><div class="k">Coach training</div><div class="v">40<span class="u">+</span></div></div>
+          <div class="cell"><div class="k">Sales channels</div><div class="v">3</div></div>
+          <div class="cell hl"><div class="k">Investor equity</div><div class="v">≤30<span class="u">%</span></div></div>
+        </div>
+      </div>
+      <div class="scroll"><span class="ln"></span> Scroll the thesis</div>
+    </div>
+  </header>
+
+  <!-- 01 METHODOLOGY -->
+  <section id="s-method">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="idx">01 —</span> The Methodology &amp; IP</div>
+      <h2>A diagnostic-first framework — <em>validated, and hard to copy.</em></h2>
+      <p class="lead">Every assessment, course, and coaching session aims at a person's specific pain point. The intellectual core is the interpretive logic that turns raw scores into positive, profile-led insight — a <em>full development pathway, not a one-off workshop</em>.</p>
+    </div>
+    <div class="kpi-grid" id="kpiGrid"></div>
+
+    <h3 style="font-family:Fraunces;font-size:1.3rem;margin:44px 0 6px">Three methods — one per persona</h3>
+    <p class="footnote" style="margin-top:0;margin-bottom:16px">Same engine, different lens. Each produces a validated index.</p>
+    <div class="trio" id="methods"></div>
+
+    <h3 style="font-family:Fraunces;font-size:1.3rem;margin:40px 0 6px">Four results — the domains every method measures</h3>
+    <div class="quad" id="results"></div>
+  </section>
+
+  <!-- BAND: pillars -->
+  <div class="band"><div class="inner">
+    <div class="eb">Three pillars, one transformation engine</div>
+    <h3>The topic changes. The engine never does.</h3>
+    <p>Every method scores the same three-pillar engine — the reason a certified practitioner base is sticky, and the reason new verticals are content, not code.</p>
+    <div class="zones">
+      <div class="z"><span class="sw" style="background:var(--align)"></span>ALIGN<small>Know what matters</small></div>
+      <div class="z"><span class="sw" style="background:var(--shift)"></span>SHIFT<small>Do what matters</small></div>
+      <div class="z"><span class="sw" style="background:var(--keep)"></span>KEEP<small>Measure what matters</small></div>
+    </div>
+  </div></div>
+
+  <!-- 02 MODEL -->
+  <section id="s-model">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="idx">02 —</span> The Business Model</div>
+      <h2>Assessments open the door. Certifications and coaching <em>keep it open.</em></h2>
+      <p class="lead">A low-friction paid assessment leads to coaching, courses, and certification — an annuity-like base — distributed by a low-CAC Ambassador network and delivered on secured software.</p>
+    </div>
+    <div class="grid-3-2">
+      <div class="panel">
+        <h3>Revenue lines</h3>
+        <div class="ph-sub">How value compounds from a single assessment</div>
+        <div id="modelTable"></div>
+      </div>
+      <div class="panel ink">
+        <h3>Delivered on InsightMent</h3>
+        <div class="ph-sub" style="margin-bottom:14px">Scale on software, not headcount</div>
+        <div class="drow"><span class="lbl" style="color:var(--tx-on-dark-2)">Serving &amp; scoring</span><span class="val" style="color:#fff">Automated</span></div>
+        <div class="drow"><span class="lbl" style="color:var(--tx-on-dark-2)">Multi-program hosting</span><span class="val" style="color:#fff">One engine, many programs</span></div>
+        <div class="drow"><span class="lbl" style="color:var(--tx-on-dark-2)">New verticals</span><span class="val" style="color:#fff">Content, not code</span></div>
+        <div class="drow"><span class="lbl" style="color:var(--tx-on-dark-2)">Supply risk</span><span class="val" style="color:#fff">Inter-co license</span></div>
+        <p class="card-note" style="color:var(--tx-on-dark-2);margin-top:16px">The ASK System is InsightMent's flagship content tenant — a content-and-certification franchise with a secured technology supply.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT PROOF BAND -->
+  <div class="band" style="background:var(--navy-2)"><div class="inner">
+    <div class="eb">Built, and in market</div>
+    <h3>A real pathway — not a personality quiz.</h3>
+    <div class="shot"><img src="assets/ask-matrix.png" alt="The ASK System — training matrix and methodology" loading="lazy"></div>
+    <p>Three methods, four domains, three pillars, and 40+ modules across LEARN → GROW → TRAIN — the published system a certified practitioner base is built on.</p>
+  </div></div>
+
+  <!-- 03 ROLLOUT -->
+  <section id="s-rollout">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="idx">03 —</span> The National Rollout</div>
+      <h2>From a proven method to <em>national coverage.</em></h2>
+      <p class="lead">Capital funds three moves at once: national reach for the ASK Profile, a speaking-and-engagements engine that fills the top of the funnel, and an Ambassador network that distributes at low CAC.</p>
+    </div>
+    <div class="trio">
+      <div class="pill"><div class="idx">Move 01</div><div class="nm" style="margin-top:6px">National ASK Profile</div><div class="ds">Take the validated assessment to individuals, teams, and organizations nationwide — the paid front door to the whole pathway.</div><div class="met">Assessment → coaching → certification</div></div>
+      <div class="pill"><div class="idx">Move 02</div><div class="nm" style="margin-top:6px">Speaking &amp; engagements</div><div class="ds">A national speaking and engagements program builds authority and fills the top of the funnel — every stage becomes a demand engine for profiles and certifications.</div><div class="met">Authority → demand</div></div>
+      <div class="pill"><div class="idx">Move 03</div><div class="nm" style="margin-top:6px">Three sales channels</div><div class="ds"><b>Ambassadors</b> (10%) advocate and refer; <b>Agents</b> (10–15%) sell actively; <b>Partners</b> license or embed at scale. Three low-CAC routes to national reach without scaling headcount.</div><div class="met">Commissions on the ActionStudio ledger</div></div>
+    </div>
+    <div class="callout" style="margin-top:30px">Speaking revenue is a real, additional line the company will quantify in diligence — the model below is built only on <b style="color:var(--tx)">documented assessment and coach-training pricing</b>, so the upside sits above it.</div>
+  </section>
+
+  <!-- 04 REVENUE MODEL -->
+  <section id="s-fin">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="idx">04 —</span> The Revenue Model</div>
+      <h2>Built from real prices. Scale the reach.</h2>
+      <p class="lead">Two engines on documented prices — the ASK Profile ($29 / $49 / $59) and coach training ($800 course · $1,800 series · $1,500–$2,000 certification) — distributed through three sales channels. Set the reach and watch combined revenue respond.</p>
+    </div>
+    <div class="grid-3-2">
+      <div class="panel">
+        <h3>Model national reach</h3>
+        <div class="ph-sub">Two revenue engines and the persona mix</div>
+        <div class="control">
+          <div class="top"><label for="volSlider">ASK Profiles per month</label><span class="out" id="volOut">2,000</span></div>
+          <input type="range" id="volSlider" min="250" max="10000" value="2000" step="250">
+          <div class="desc">National reach across individuals, teams, and organizations — the paid front door.</div>
+        </div>
+        <div class="control">
+          <div class="top"><label for="mixSlider">Mix — leadership &amp; team share</label><span class="out" id="mixOut">40%</span></div>
+          <input type="range" id="mixSlider" min="0" max="80" value="40" step="5">
+          <div class="desc">Higher-tier Leadership ($49) and Team ($59) profiles lift the blended price above the $29 entry point.</div>
+        </div>
+        <div class="control">
+          <div class="top"><label for="coachSlider">Coach-training enrollments / year</label><span class="out" id="coachOut">400</span></div>
+          <input type="range" id="coachSlider" min="0" max="3000" value="400" step="50">
+          <div class="desc">LEARN → GROW → TRAIN and the Coaching Certification Practicum — a blended ~$1,300 per enrollment across the tiers.</div>
+        </div>
+        <div class="field-row"><label>Channel-sourced share of revenue</label><div class="inp"><input type="number" id="chanPct" value="60" step="5"><span>%</span></div></div>
+        <p class="footnote">Documented rates: Profiles $29 / $49 / $59; coach tiers $800 / $1,800 / $1,500–$2,000; commissions Ambassadors 10% · Agents 10–15% · Partners ~15%. Volumes illustrative.</p>
+      </div>
+      <div class="panel ink">
+        <h3>Combined annual run-rate</h3>
+        <div class="ph-sub">Assessments + coach training, on the selected reach</div>
+        <div id="revBars"></div>
+        <div class="out-grid" style="margin-top:20px;border-color:var(--navy-3)">
+          <div class="o" style="background:var(--navy-2)"><div class="k">Assessment revenue</div><div class="v" id="oRev" style="color:#fff">$—</div><div class="sub" style="color:var(--tx-on-dark-2)" id="oBlend">—</div></div>
+          <div class="o" style="background:var(--navy-2)"><div class="k">Coach-training revenue</div><div class="v" id="oCoach" style="color:#fff">$—</div><div class="sub" style="color:var(--tx-on-dark-2)">LEARN · GROW · TRAIN</div></div>
+          <div class="o" style="background:var(--navy-2)"><div class="k">Combined annual</div><div class="v" id="oTotal" style="color:var(--gold-hi)">$—</div><div class="sub" style="color:var(--tx-on-dark-2)">documented pricing</div></div>
+          <div class="o" style="background:var(--navy-2)"><div class="k">Channel commission</div><div class="v" id="oChan" style="color:#fff">$—</div><div class="sub" style="color:var(--tx-on-dark-2)" id="oChanSub">blended across 3 channels</div></div>
+        </div>
+        <p class="card-note" style="color:var(--tx-on-dark-2);margin-top:14px">Speaking &amp; engagements sit <b style="color:#fff">above</b> this — a demand engine and revenue line the company quantifies in diligence.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 WAYS -->
+  <section id="s-ways">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="idx">05 —</span> Ways to Participate</div>
+      <h2>A minority position — <em>up to 30%.</em></h2>
+      <p class="lead">The ASK System is releasing <em>up to 30%</em> in growth equity, alongside an <em>employee vesting program</em> that aligns the team building the franchise. Founder and team retain the majority; a commercial alliance is open for partners who want reach without equity.</p>
+    </div>
+    <div class="ways">
+      <div class="way" style="border-color:var(--accent)"><div class="n" style="color:var(--accent-ink)">Primary</div><h4>Growth investment</h4><p>Take a minority position — <b>up to 30%</b> — to expand the assessment, coach-training, and certification franchise across the three channels nationally.</p><div class="eq">Equity — up to 30%</div></div>
+      <div class="way"><div class="n">People</div><h4>Employee vesting</h4><p>A vesting pool aligns the coaches, agents, and team who build the franchise — retention and shared upside built into the cap table from the start.</p><div class="eq">Reserved for the team</div></div>
+      <div class="way"><div class="n">Commercial</div><h4>Licensing alliance</h4><p>An enterprise, association, coaching network, or L&amp;D provider licenses or embeds ASK assessments and certifications — no equity required.</p><div class="eq">Model 1 · no equity</div></div>
+    </div>
+    <div class="callout" style="margin-top:30px">A commercial alliance is frequently the fastest, lowest-risk way to begin — it proves fit and de-risks a later equity step, without requiring one.</div>
+  </section>
+
+  <footer>
+    <div class="conf">Strictly Confidential — Subject to Mutual NDA</div>
+    <p>This memorandum has been prepared by RedShift Holdings solely to assist the recipient in evaluating a possible investment, partnership, or commercial relationship involving The ASK System, a subsidiary of RedShift Consulting. It is furnished on a confidential basis. Nothing herein constitutes an offer to sell or a solicitation to buy any security, nor investment, legal, tax, or accounting advice. Assessment pricing is current and documented; volumes and projections are illustrative and assumption-driven; certification, coaching, and speaking figures will be provided by the company in diligence. Recipients should conduct independent diligence.</p>
+    <p style="margin-top:16px;color:var(--tx-2)">© RedShift Holdings · The ASK System · Prepared <span id="prepDate">2026</span></p>
+  </footer>
+</div>
+<div class="tip" id="tip"></div>
+
+<script>
+/* ================= DATA — grounded in ASK Training Matrix + live pricing ================= */
+const DATA={
+  meta:{prepared:"July 2026", code:"asksystem2026"},
+  kpis:[
+    {k:"Validated instruments",v:"3",d:"Personal · Leadership · Team indices",chip:"proprietary",cls:"flat"},
+    {k:"ASK Profile entry",v:"$29",d:"paid front door · $29 / $49 / $59",chip:"$295 team floor",cls:"up"},
+    {k:"Coach training",v:"40+",d:"modules · LEARN → GROW → TRAIN + certification",chip:"$800–$2,000",cls:"up"},
+    {k:"Sales channels",v:"3",d:"Ambassadors · Agents · Partners",chip:"10–15%",cls:"flat"}
+  ],
+  methods:[
+    {idx:"01", nm:"Personal", met:"Personal Performance Index", price:"$29", ds:"A snapshot, not a sentence. A compass, not a grade — where you are now, and the practical moves for what's next.", who:"For every individual", c:"--align"},
+    {idx:"02", nm:"Leadership", met:"Leadership Growth Index", price:"$49", ds:"“Everyone is leading something or someone.” Leadership is not about position — it's about alignment.", who:"For anyone who leads", c:"--shift"},
+    {idx:"03", nm:"Team", met:"Team Dynamics Index", price:"$59", ds:"How a group actually performs together — shared language for what matters, so decisions align across the team.", who:"For intact teams", c:"--keep"}
+  ],
+  results:[
+    {h:"Clarity", d:"Knowing confidently what you're meant to do, and how to show up."},
+    {h:"Curiosity", d:"Reaching solutions without friction — problem-solving and innovation."},
+    {h:"Commitment", d:"A conscious daily choice toward the goals set. Without it, teams don't win."},
+    {h:"Consistency", d:"Repeatable performance — it predicts success over time."}
+  ],
+  model:[
+    {k:"ASK Profile assessment", v:"$29 – $59", note:"the paid front door"},
+    {k:"Team / seat licenses", v:"$59 / seat · min 5", note:"organizational rollouts"},
+    {k:"Coaching & courses", v:"recurring", note:"36 modules · 12 per level"},
+    {k:"Certification program", v:"annuity", note:"credentialed, sticky base"},
+    {k:"Speaking & engagements", v:"demand engine", note:"national top-of-funnel"}
+  ],
+  pricing:{ personal:29, leadership:49, team:59,
+    coach:{ course:800, series:1800, practicum:1750, blended:1300 },  // LEARN→GROW→TRAIN + Certification Practicum
+    channels:[ {k:"Ambassadors", rate:0.10, split:0.40}, {k:"Agents", rate:0.13, split:0.40}, {k:"Partners", rate:0.15, split:0.20} ]
+  }
+};
+
+/* helpers */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const fmtK=n=>{const a=Math.abs(n);if(a>=1e6)return '$'+(n/1e6).toFixed(a>=1e7?1:2)+'M';if(a>=1e3)return '$'+Math.round(n/1e3)+'K';return '$'+Math.round(n);};
+const fmt=n=>'$'+Math.round(n).toLocaleString('en-US');
+const pct=(n,d=0)=>(n*100).toFixed(d)+'%';
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const TIP=$('#tip');
+function showTip(h,x,y){TIP.innerHTML=h;TIP.style.opacity=1;TIP.style.left=(x+14)+'px';TIP.style.top=(y+14)+'px';}
+function hideTip(){TIP.style.opacity=0;}
+function wireTips(b){b.querySelectorAll('[data-tt]').forEach(el=>{el.style.cursor='crosshair';el.addEventListener('mousemove',e=>showTip(`<div class="tt">${el.dataset.tt}</div><div class="tv">${el.dataset.tv}</div>`,e.clientX,e.clientY));el.addEventListener('mouseleave',hideTip);});}
+
+/* ================= generative "profile field" canvas =================
+   Many individual dots, colored by nearest pillar zone, drifting — "a nation of profiles". */
+function profileField(canvas,opts){
+  const c=canvas.getContext('2d');let W,H,pts,raf,t=0;
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const cols=[ '--align','--shift','--keep' ];
+  const N=opts.n||120;
+  function size(){W=canvas.width=canvas.offsetWidth*devicePixelRatio;H=canvas.height=canvas.offsetHeight*devicePixelRatio;init();}
+  function init(){pts=[];for(let i=0;i<N;i++){pts.push({x:Math.random()*W,y:Math.random()*H,z:i%3,vx:(Math.random()-.5)*0.15*devicePixelRatio,vy:(Math.random()-.5)*0.15*devicePixelRatio,ph:Math.random()*6.28,sz:(Math.random()*2+1.2)*devicePixelRatio});}}
+  function draw(){
+    t++;c.clearRect(0,0,W,H);
+    const colv=cols.map(css);
+    // faint links between nearby same-zone points
+    for(let i=0;i<pts.length;i++){const a=pts[i];a.x+=a.vx;a.y+=a.vy;if(a.x<0||a.x>W)a.vx*=-1;if(a.y<0||a.y>H)a.vy*=-1;
+      for(let j=i+1;j<pts.length;j++){const b=pts[j];if(b.z!==a.z)continue;const d=Math.hypot(a.x-b.x,a.y-b.y);if(d<90*devicePixelRatio){const al=(1-d/(90*devicePixelRatio))*0.16;c.strokeStyle=hexA(colv[a.z],al);c.lineWidth=1*devicePixelRatio;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke();}}}
+    pts.forEach(p=>{const pulse=0.6+Math.sin(t*0.02+p.ph)*0.4;c.fillStyle=hexA(colv[p.z],0.75*pulse);c.fillRect(p.x-p.sz,p.y-p.sz,p.sz*2,p.sz*2);});
+    if(!reduce)raf=requestAnimationFrame(draw);
+  }
+  function hexA(hex,a){hex=hex.replace('#','');if(hex.length===3)hex=hex.split('').map(x=>x+x).join('');const r=parseInt(hex.slice(0,2),16),g=parseInt(hex.slice(2,4),16),b=parseInt(hex.slice(4,6),16);return `rgba(${r},${g},${b},${a})`;}
+  size();draw();addEventListener('resize',()=>{cancelAnimationFrame(raf);size();draw();});
+}
+
+/* renders */
+function renderKpis(){$('#kpiGrid').innerHTML=DATA.kpis.map((c,i)=>`<div class="kpi ${i%2?'nv':''}"><div class="k">${c.k}</div><div class="v">${c.v}</div><div class="d">${c.d} <span class="chip ${c.cls}">${c.chip}</span></div></div>`).join('');}
+function renderMethods(){$('#methods').innerHTML=DATA.methods.map(m=>`<div class="pill"><div class="tk" style="background:var(${m.c})"></div><div class="idx">${m.idx} · ${m.price}</div><div class="nm">${m.nm}</div><div class="ds">${m.ds}</div><div class="met">${m.met} · ${m.who}</div></div>`).join('');}
+function renderResults(){$('#results').innerHTML=DATA.results.map(r=>`<div class="q"><div class="h">${r.h}</div><div class="d">${r.d}</div></div>`).join('');}
+function renderModel(){$('#modelTable').innerHTML=DATA.model.map(m=>`<div class="drow"><span class="lbl">${m.k}<div style="font-size:.72rem;color:var(--tx-3)">${m.note}</div></span><span class="val">${m.v}</span></div>`).join('');}
+
+function blendedPrice(mix){ // mix = share of leadership+team (split evenly), rest personal
+  const p=DATA.pricing;const hi=mix/100;const lead=hi/2,team=hi/2,pers=1-hi;
+  return pers*p.personal+lead*p.leadership+team*p.team;
+}
+function renderRevModel(){
+  const vol=+$('#volSlider').value, mix=+$('#mixSlider').value, coach=+$('#coachSlider').value, chan=+$('#chanPct').value/100;
+  $('#volOut').textContent=vol.toLocaleString();$('#mixOut').textContent=mix+'%';$('#coachOut').textContent=coach.toLocaleString();
+  const blend=blendedPrice(mix), assessRev=vol*12*blend, coachRev=coach*DATA.pricing.coach.blended, total=assessRev+coachRev;
+  const ch=DATA.pricing.channels, blendedRate=ch.reduce((a,c)=>a+c.split*c.rate,0), commission=total*chan*blendedRate;
+  $('#oRev').textContent=fmtK(assessRev);$('#oBlend').textContent='blended '+fmt(blend)+' / profile';
+  $('#oCoach').textContent=fmtK(coachRev);
+  $('#oTotal').textContent=fmtK(total);
+  $('#oChan').textContent=fmtK(commission);
+  $('#oChanSub').textContent=pct(blendedRate)+' blended · '+pct(chan)+' sourced';
+  // stacked bar: two engines
+  const data=[{k:"ASK Profile assessments",rev:assessRev,c:'--align'},{k:"Coach training & certification",rev:coachRev,c:'--shift'}];
+  const box=$('#revBars'),W=box.clientWidth||360,H=158,full=W-8,tot=Math.max(1,total);
+  let x=4,g='';
+  data.forEach(d=>{const w=d.rev/tot*full;g+=`<rect x="${x}" y="46" width="${Math.max(0,w-2)}" height="30" fill="var(${d.c})" data-tt="${d.k}" data-tv="${fmtK(d.rev)}/yr"></rect>`;x+=w;});
+  g+=`<text x="4" y="30" style="fill:#fff;font-family:Fraunces;font-size:26px;font-weight:600">${fmtK(total)}</text>`;
+  g+=`<text x="${W-4}" y="30" text-anchor="end" style="fill:var(--tx-on-dark-2);font-size:10.5px;font-family:JetBrains Mono">COMBINED / YR</text>`;
+  g+=`<g font-family="JetBrains Mono" font-size="10.5">
+    <rect x="4" y="98" width="11" height="11" fill="var(--align)"/><text x="21" y="107" style="fill:var(--tx-on-dark-2)">Assessments · ${fmtK(assessRev)}</text>
+    <rect x="4" y="118" width="11" height="11" fill="var(--shift)"/><text x="21" y="127" style="fill:var(--tx-on-dark-2)">Coach training · ${fmtK(coachRev)}</text>
+    <rect x="4" y="138" width="11" height="11" fill="var(--keep)"/><text x="21" y="147" style="fill:var(--tx-on-dark-2)">Ambassadors 10% · Agents 10–15% · Partners ~15%</text></g>`;
+  box.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" aria-label="Combined revenue: assessments + coach training">${g}</svg>`;
+  wireTips(box);
+}
+
+/* rail */
+function buildRail(){
+  const secs=[['s-method','Methodology'],['s-model','Model'],['s-rollout','Rollout'],['s-fin','Revenue'],['s-ways','Participate']];
+  $('#railList').innerHTML=secs.map((s,i)=>`<li><a href="#${s[0]}" data-id="${s[0]}" aria-label="${s[1]}"><span class="dot"></span><span class="rn">${String(i+1).padStart(2,'0')}</span><span class="rname">${s[1]}</span></a></li>`).join('');
+  const links=$$('.rail a');const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)links.forEach(l=>l.classList.toggle('on',l.dataset.id===e.target.id));});},{rootMargin:'-45% 0px -50% 0px'});
+  secs.forEach(s=>{const el=document.getElementById(s[0]);if(el)obs.observe(el);});
+}
+function initTheme(){$('#themeBtn').addEventListener('click',()=>{const cur=document.documentElement.getAttribute('data-theme');const sys=matchMedia('(prefers-color-scheme:dark)').matches;const now=cur||(sys?'dark':'light');document.documentElement.setAttribute('data-theme',now==='dark'?'light':'dark');renderRevModel();});}
+
+async function unlock(code){return code.trim().toLowerCase()===DATA.meta.code;}
+function initGate(){const f=$('#gateForm');f.addEventListener('submit',async e=>{e.preventDefault();if(await unlock($('#pw').value)){document.body.classList.remove('locked');$('#gate').style.display='none';boot();}else{$('#gateErr').textContent='Incorrect access code.';$('#pw').value='';$('#pw').focus();}});$('#pw').focus();}
+
+let booted=false;
+function boot(){
+  if(booted)return;booted=true;
+  renderKpis();renderMethods();renderResults();renderModel();renderRevModel();buildRail();
+  $('#prepDate').textContent=DATA.meta.prepared;
+  profileField($('#heroCanvas'),{n:150});
+  ['volSlider','mixSlider','coachSlider','chanPct'].forEach(id=>$('#'+id).addEventListener('input',renderRevModel));
+  let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(renderRevModel,180);});
+}
+
+profileField($('#gateCanvas'),{n:110});
+initTheme();initGate();
+</script>
+</body>
+</html>
