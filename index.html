@@ -415,9 +415,40 @@ svg text{font-family:"JetBrains Mono";fill:var(--tx-3)}
   </section>
 
   <!-- 05 WAYS -->
+  <!-- 05 IP VALUE -->
+  <section id="s-ip">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="idx">05 —</span> The Value of the IP</div>
+      <h2>Not replacement cost — <em>earning potential.</em></h2>
+      <p class="lead">AI collapses the cost of building software, which makes "cost to rebuild" the wrong measure here too. The value is what the methodology, curriculum, and distribution network can earn at national scale — content and brand a competitor can't shortcut. Set the multiple.</p>
+    </div>
+    <div class="grid-3-2">
+      <div class="panel">
+        <h3>Mature ARR potential at scale</h3>
+        <div class="ph-sub">Illustrative recurring revenue each asset line can support</div>
+        <div id="askIpChart"></div>
+      </div>
+      <div class="panel ink">
+        <h3>Implied enterprise value</h3>
+        <div class="ph-sub">Mature ARR potential × multiple</div>
+        <div class="control" style="margin-top:6px">
+          <div class="top"><label style="color:#fff">ARR multiple</label><span class="out" id="askMultOut" style="color:var(--gold-hi)">4.0×</span></div>
+          <input type="range" id="askMultSlider" min="3" max="5" value="4" step="0.5">
+          <div class="desc" style="color:var(--tx-on-dark-2)">3–5× ARR — content/franchise businesses with recurring, licensable IP.</div>
+        </div>
+        <div class="out-grid" style="margin-top:16px;border-color:var(--line)">
+          <div class="o" style="background:var(--navy-2)"><div class="k">Mature ARR potential</div><div class="v" style="color:#fff">$2.5–9.5M</div><div class="sub" style="color:var(--tx-on-dark-2)">across three asset lines</div></div>
+          <div class="o" style="background:var(--navy-2)"><div class="k">Implied EV range</div><div class="v" id="askIpEv" style="color:var(--gold-hi)">$—</div><div class="sub" style="color:var(--tx-on-dark-2)">execution-dependent</div></div>
+        </div>
+        <p class="card-note" style="color:var(--tx-on-dark-2);margin-top:16px">The InsightMent software itself is Simpliment's asset, licensed in — not double-counted here. What's valued below is RedShift's own IP: the validated methodology, the 40-course curriculum, and the certified-practitioner and Ambassador network built around it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 WAYS -->
   <section id="s-ways">
     <div class="sec-head">
-      <div class="eyebrow"><span class="idx">05 —</span> Ways to Participate</div>
+      <div class="eyebrow"><span class="idx">06 —</span> Ways to Participate</div>
       <h2>A minority position — <em>up to 30%.</em></h2>
       <p class="lead">The ASK System is releasing <em>up to 30%</em> in growth equity, alongside an <em>employee vesting program</em> that aligns the team building the franchise. Founder and team retain the majority; a commercial alliance is open for partners who want reach without equity.</p>
     </div>
@@ -469,7 +500,12 @@ const DATA={
     coach:{ seatPrice:1850, seatsPerCohort:20, perCohort:37000, seriesCount:8, courseCount:24, cohortsNowLo:4, cohortsNowHi:6 },  // live/in-person cohort training: $1,850/seat × 20 seats
     evergreen:{ courses:16, priceLo:49, priceHi:99 },  // online/evergreen — upside, not modeled (no committed volume)
     channels:[ {k:"Ambassadors", rate:0.10, split:0.40}, {k:"Agents", rate:0.13, split:0.40}, {k:"Partners", rate:0.15, split:0.20} ]
-  }
+  },
+  askIp:[
+    {k:"ASK Profile assessment IP", lo:1000000, hi:5000000, c:"--gold"},
+    {k:"Coach training & certification curriculum", lo:1000000, hi:3000000, c:"--val"},
+    {k:"Ambassador/Agent/Partner network & brand", lo:500000, hi:1500000, c:"--keep"}
+  ]
 };
 
 /* helpers */
@@ -543,14 +579,33 @@ function renderRevModel(){
   wireTips(box);
 }
 
+function renderAskIp(){
+  const box=$('#askIpChart'),W=box.clientWidth||520,H=250,P={l:8,r:8,t:10,b:56};
+  const iw=W-P.l-P.r,ih=H-P.t-P.b,maxV=5000000*1.05;
+  const gap=iw/DATA.askIp.length,bw=gap*0.5,yb=v=>P.t+ih-(v/maxV)*ih;
+  let g='';
+  DATA.askIp.forEach((it,i)=>{const cx=P.l+gap*i+gap/2;
+    const yl=yb(it.lo),yh=yb(it.hi);
+    g+=`<rect x="${cx-bw/2}" y="${yh}" width="${bw}" height="${yb(0)-yh}" fill="${css(it.c)}" opacity=".22"></rect>`;
+    g+=`<rect x="${cx-bw/2}" y="${yh}" width="${bw}" height="${yl-yh}" fill="${css(it.c)}" data-tt="${it.k}" data-tv="${fmtK(it.lo)}–${fmtK(it.hi)} ARR"></rect>`;
+    g+=`<text x="${cx}" y="${yh-8}" text-anchor="middle" class="axis-lbl" style="fill:var(--tx);font-weight:600">${fmtK(it.hi)}</text>`;
+    g+=`<text x="${cx}" y="${yl+14}" text-anchor="middle" class="axis-lbl" style="fill:var(--tx-3)">${fmtK(it.lo)}</text>`;
+    const words=it.k.split(' ');let lines=[],cur='';words.forEach(w=>{if((cur+w).length>16){lines.push(cur.trim());cur=w+' ';}else cur+=w+' ';});lines.push(cur.trim());
+    lines.slice(0,3).forEach((ln,li)=>g+=`<text x="${cx}" y="${H-P.b+16+li*12}" text-anchor="middle" style="font-size:9.5px;fill:var(--tx-2)">${ln}</text>`);});
+  box.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" role="img" aria-label="ARR potential by asset line">${g}</svg>`;
+  wireTips(box);
+  updateAskIpEv();
+}
+function updateAskIpEv(){const m=+$('#askMultSlider').value;$('#askMultOut').textContent=m.toFixed(1)+'×';$('#askIpEv').textContent=fmtK(2500000*m)+'–'+fmtK(9500000*m);}
+
 /* rail */
 function buildRail(){
-  const secs=[['s-method','Methodology'],['s-model','Model'],['s-rollout','Rollout'],['s-fin','Revenue'],['s-ways','Participate']];
+  const secs=[['s-method','Methodology'],['s-model','Model'],['s-rollout','Rollout'],['s-fin','Revenue'],['s-ip','IP Value'],['s-ways','Participate']];
   $('#railList').innerHTML=secs.map((s,i)=>`<li><a href="#${s[0]}" data-id="${s[0]}" aria-label="${s[1]}"><span class="dot"></span><span class="rn">${String(i+1).padStart(2,'0')}</span><span class="rname">${s[1]}</span></a></li>`).join('');
   const links=$$('.rail a');const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)links.forEach(l=>l.classList.toggle('on',l.dataset.id===e.target.id));});},{rootMargin:'-45% 0px -50% 0px'});
   secs.forEach(s=>{const el=document.getElementById(s[0]);if(el)obs.observe(el);});
 }
-function initTheme(){$('#themeBtn').addEventListener('click',()=>{const cur=document.documentElement.getAttribute('data-theme');const sys=matchMedia('(prefers-color-scheme:dark)').matches;const now=cur||(sys?'dark':'light');document.documentElement.setAttribute('data-theme',now==='dark'?'light':'dark');renderRevModel();});}
+function initTheme(){$('#themeBtn').addEventListener('click',()=>{const cur=document.documentElement.getAttribute('data-theme');const sys=matchMedia('(prefers-color-scheme:dark)').matches;const now=cur||(sys?'dark':'light');document.documentElement.setAttribute('data-theme',now==='dark'?'light':'dark');renderRevModel();renderAskIp();});}
 
 async function unlock(code){return code.trim().toLowerCase()===DATA.meta.code;}
 function initGate(){const f=$('#gateForm');f.addEventListener('submit',async e=>{e.preventDefault();if(await unlock($('#pw').value)){document.body.classList.remove('locked');$('#gate').style.display='none';boot();}else{$('#gateErr').textContent='Incorrect access code.';$('#pw').value='';$('#pw').focus();}});$('#pw').focus();}
@@ -558,11 +613,12 @@ function initGate(){const f=$('#gateForm');f.addEventListener('submit',async e=>
 let booted=false;
 function boot(){
   if(booted)return;booted=true;
-  renderKpis();renderMethods();renderResults();renderModel();renderRevModel();buildRail();
+  renderKpis();renderMethods();renderResults();renderModel();renderRevModel();renderAskIp();buildRail();
   $('#prepDate').textContent=DATA.meta.prepared;
   profileField($('#heroCanvas'),{n:150});
   ['volSlider','mixSlider','coachSlider','evergreenSlider','chanPct'].forEach(id=>$('#'+id).addEventListener('input',renderRevModel));
-  let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(renderRevModel,180);});
+  $('#askMultSlider').addEventListener('input',updateAskIpEv);
+  let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{renderRevModel();renderAskIp();},180);});
 }
 
 profileField($('#gateCanvas'),{n:110});
