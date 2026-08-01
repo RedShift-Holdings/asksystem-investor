@@ -222,6 +222,10 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;background:var(--acce
 .band .z small{display:block;color:var(--tx-on-dark-2);font-weight:400;font-size:.78rem}
 .shot{margin:26px 0 6px;border:1px solid var(--navy-3);box-shadow:0 20px 60px rgba(0,0,0,.45);max-width:940px;background:#fff}
 .shot img{width:100%;display:block}
+.shot-row{display:flex;gap:18px;flex-wrap:wrap;margin:26px 0 4px}
+.shot-row .cell{flex:1 1 300px;min-width:280px}
+.shot-row .shot{margin:0;max-width:none}
+.shot-row .cap{font-size:.72rem;color:var(--tx-on-dark-2);margin-top:8px;font-family:"JetBrains Mono";letter-spacing:.02em}
 
 .ways{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 @media(max-width:760px){.ways{grid-template-columns:1fr}}
@@ -344,7 +348,16 @@ svg text{font-family:"JetBrains Mono";fill:var(--tx-3)}
   <div class="band" style="background:var(--navy-2)"><div class="inner">
     <div class="eb">Built, and in market</div>
     <h3>A real pathway — not a personality quiz.</h3>
-    <div class="shot"><img src="assets/ask-matrix.png" alt="The ASK System — training matrix and methodology" loading="lazy"></div>
+    <div class="shot-row">
+      <div class="cell">
+        <div class="shot"><img src="assets/ask-results-hero.png" alt="The ASK System — a real personal results page, AI-generated highlights" loading="lazy"></div>
+        <div class="cap">A live results page — named profile, AI-written highlights, a first move, not a score dump</div>
+      </div>
+      <div class="cell">
+        <div class="shot"><img src="assets/ask-team-insight.png" alt="The ASK System — a real team insight panel" loading="lazy"></div>
+        <div class="cap">Same engine, organizational scale — what leaders want vs. what the team says it needs, reconciled</div>
+      </div>
+    </div>
     <p>Three methods, four domains, three pillars, and 40+ modules across LEARN → GROW → TRAIN — the published system a certified practitioner base is built on.</p>
   </div></div>
 
